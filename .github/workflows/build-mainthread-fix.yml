@@ -1,5 +1,5 @@
 name: Build SnowLuma MainThread Fix
-o1n:
+on:
   workflow_dispatch:
 permissions:
   contents: read

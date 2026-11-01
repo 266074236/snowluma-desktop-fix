@@ -1,0 +1,68 @@
+name: Build SnowLuma MainThread Fix
+o1n:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      CARGO_INCREMENTAL: '0'
+      CARGO_BUILD_JOBS: '4'
+    steps:
+      - name: Checkout official 3.5.16 source
+        uses: actions/checkout@v4
+        with:
+          repository: NapNeko/NapCatQQ-Desktop
+          ref: '3.5.16'
+          persist-credentials: false
+      - name: Apply tested repair
+        shell: pwsh
+        run: |
+          [IO.File]::WriteAllBytes('MainThread-node-presence.patch', [Convert]::FromBase64String('LS0tIGEvY3JhdGVzL25jZC1iYWNrZW5kLXNub3dsdW1hL3Jlc291cmNlcy9ub2RlLXByZXNlbmNlLnB5CisrKyBiL2NyYXRlcy9uY2QtYmFja2VuZC1zbm93bHVtYS9yZXNvdXJjZXMvbm9kZS1wcmVzZW5jZS5weQpAQCAtMjIsNyArMjIsNyBAQAogICAgIHJldHVybiBmaWVsZHNbMTldLCBmaWVsZHNbMF0KIAogCi1kZWYgc25hcHNob3QoZXhwZWN0ZWRfdWlkLCBwcm9jX3Jvb3Q9UGF0aCgiL3Byb2MiKSk6CitkZWYgc25hcHNob3QoZXhwZWN0ZWRfdWlkLCBwcm9jX3Jvb3Q9UGF0aCgiL3Byb2MiKSwgbm9kZV9leGU9Tm9uZSk6CiAgICAgcmVzdWx0ID0gW10KICAgICBmb3IgcHJvYyBpbiBwcm9jX3Jvb3QuaXRlcmRpcigpOgogICAgICAgICBpZiBub3QgcHJvYy5uYW1lLmlzZGlnaXQoKToKQEAgLTMyLDcgKzMyLDggQEAKICAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICAgY29tbSA9IChwcm9jIC8gImNvbW0iKS5yZWFkX3RleHQoKS5zdHJpcCgpCiAgICAgICAgICAgICBpZiBjb21tIG5vdCBpbiAoIm5vZGUiLCAibm9kZWpzIik6Ci0gICAgICAgICAgICAgICAgY29udGludWUKKyAgICAgICAgICAgICAgICBpZiBub2RlX2V4ZSBpcyBOb25lIG9yIG9zLnJlYWRsaW5rKHByb2MgLyAiZXhlIikgIT0gbm9kZV9leGU6CisgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgICBzdGFydF90aW1lLCBzdGF0ZSA9IGJpcnRoKHByb2MpCiAgICAgICAgICAgICBpZiBzdGF0ZSBub3QgaW4gKCJaIiwgIlgiKToKICAgICAgICAgICAgICAgICByZXN1bHQuYXBwZW5kKHsicGlkIjogaW50KHByb2MubmFtZSksICJzdGFydF90aW1lIjogc3RhcnRfdGltZX0pCkBAIC05Miw4ICs5Myw2IEBACiAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIGxpbmUuc3RhcnRzd2l0aCgiVWlkOiIpKQogICAgICAgICBpZiBwcm9jLnN0YXQoKS5zdF91aWQgIT0gZXhwZWN0ZWRfdWlkIG9yIHVpZF9maWVsZHMgIT0gW3N0cihleHBlY3RlZF91aWQpXSAqIDQ6CiAgICAgICAgICAgICByYWlzZSBQcm9iZUVycm9yKCJjaGFuZ2VkIiwgIk5vZGUg6L+b56iL55So5oi36Lqr5Lu95bey5Y+Y5YyW77yM5pyq5ZCv5Yqo5paw5a6e5L6LIikKLSAgICAgICAgaWYgKHByb2MgLyAiY29tbSIpLnJlYWRfdGV4dCgpLnN0cmlwKCkgbm90IGluICgibm9kZSIsICJub2RlanMiKToKLSAgICAgICAgICAgIHJhaXNlIFByb2JlRXJyb3IoImNoYW5nZWQiLCAi55uu5qCHIFBJRCDlt7LkuI3lho3mmK8gTm9kZe+8jOacquWQr+WKqOaWsOWunuS+iyIpCiAgICAgICAgIGV4ZSA9IG9zLnJlYWRsaW5rKHByb2MgLyAiZXhlIikKICAgICAgICAgY3dkID0gb3MucmVhZGxpbmsocHJvYyAvICJjd2QiKQogICAgICAgICBhcmdzID0gKHByb2MgLyAiY21kbGluZSIpLnJlYWRfYnl0ZXMoKS5kZWNvZGUoInV0Zi04IiwgInN1cnJvZ2F0ZWVzY2FwZSIpLnNwbGl0KCJcMCIpCkBAIC0zMjcsMTQgKzMyNiwxNCBAQAogICAgICAgICByZXR1cm4gaW5zcGVjdChjYW5kaWRhdGVzLCBleHBlY3RlZF91aWQsIG5vZGVfZXhlLCBzbF9kaXIsIHByb2Nfcm9vdCkKICAgICBpZiBvcy5nZXR1aWQoKSAhPSBleHBlY3RlZF91aWQ6CiAgICAgICAgIHJhaXNlIFByb2JlRXJyb3IoImludmFsaWQiLCAiTm9kZSDlgJnpgInmnprkuL7lv4Xpobvkvb/nlKjljp8gU1NIIOeUqOaItyIpCi0gICAgYmVmb3JlID0gc25hcHNob3QoZXhwZWN0ZWRfdWlkLCBwcm9jX3Jvb3QpCisgICAgYmVmb3JlID0gc25hcHNob3QoZXhwZWN0ZWRfdWlkLCBwcm9jX3Jvb3QsIG5vZGVfZXhlKQogICAgIGlmIG1vZGUgPT0gInNuYXBzaG90IjoKICAgICAgICAgcmV0dXJuIHsic3RhdGUiOiAic25hcHNob3QiLCAic25hcHNob3QiOiBiZWZvcmV9CiAgICAgaWYgbW9kZSBub3QgaW4gKCJzY2FuIiwgImVuZHBvaW50X3NjYW4iKToKICAgICAgICAgcmFpc2UgUHJvYmVFcnJvcigiaW52YWxpZCIsICJOb2RlIOajgOafpeaooeW8j+aXoOaViCIpCiAgICAgaW5zcGVjdCA9IGluc3BlY3RfZW5kcG9pbnQgaWYgbW9kZSA9PSAiZW5kcG9pbnRfc2NhbiIgZWxzZSBpbnNwZWN0X2NhbmRpZGF0ZXMKICAgICByZXN1bHQgPSBpbnNwZWN0KGJlZm9yZSwgZXhwZWN0ZWRfdWlkLCBub2RlX2V4ZSwgc2xfZGlyLCBwcm9jX3Jvb3QpCi0gICAgaWYgc25hcHNob3QoZXhwZWN0ZWRfdWlkLCBwcm9jX3Jvb3QpICE9IGJlZm9yZToKKyAgICBpZiBzbmFwc2hvdChleHBlY3RlZF91aWQsIHByb2Nfcm9vdCwgbm9kZV9leGUpICE9IGJlZm9yZToKICAgICAgICAgcmFpc2UgUHJvYmVFcnJvcigiY2hhbmdlZCIsICJOb2RlIOWAmemAiei/m+eoi+WcqOajgOafpeacn+mXtOWPmOWMlu+8jOacquWQr+WKqOaWsOWunuS+iyIpCiAgICAgcmV0dXJuIHJlc3VsdAogCi0tLSBhL2NyYXRlcy9uY2QtYmFja2VuZC1zbm93bHVtYS9yZXNvdXJjZXMvbm9kZV9wcmVzZW5jZV90ZXN0LnB5CisrKyBiL2NyYXRlcy9uY2QtYmFja2VuZC1zbm93bHVtYS9yZXNvdXJjZXMvbm9kZV9wcmVzZW5jZV90ZXN0LnB5CkBAIC0xNjUsNSArMTY1LDI4IEBACiAgICAgICAgICAgICAgICAgbm9kZS5wcm9iZSgnaW5zcGVjdCcsIDEwMDAsICcvb3B0L3NsL25vZGUnLCAnL29wdC9zbCcsIGNhbmRpZGF0ZXMpCiAKIAorICAgIGRlZiB0ZXN0X21haW50aHJlYWRfd2l0aF9leGFjdF9leGVjdXRhYmxlX2lzX2RldGVjdGVkKHNlbGYpOgorICAgICAgICByb290LCBfLCBmaWVsZHMsIGxpbmtzID0gc2VsZi5zaW5nbGUoKQorICAgICAgICBmaWVsZHNbOTAxXVsnY29tbSddLnJlYWRfdGV4dC5yZXR1cm5fdmFsdWUgPSAnTWFpblRocmVhZFxuJworICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHNlbGYuc2Nhbihyb290LCBsaW5rcylbJ3N0YXRlJ10sICdwcmVzZW50JykKKworICAgIGRlZiB0ZXN0X21haW50aHJlYWRfd2l0aF91bnJlbGF0ZWRfZXhlY3V0YWJsZV9pc19pZ25vcmVkKHNlbGYpOgorICAgICAgICByb290LCBfLCBmaWVsZHMsIGxpbmtzID0gc2VsZi5zaW5nbGUoZXhlPScvYW5vdGhlci9ub2RlJykKKyAgICAgICAgZmllbGRzWzkwMV1bJ2NvbW0nXS5yZWFkX3RleHQucmV0dXJuX3ZhbHVlID0gJ01haW5UaHJlYWRcbicKKyAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChzZWxmLnNjYW4ocm9vdCwgbGlua3MpWydzdGF0ZSddLCAnYWJzZW50JykKKworICAgIGRlZiB0ZXN0X3JlbmFtZWRfbm9kZV9zdGlsbF9yZXF1aXJlc19pbnN0YWxsYXRpb25fZW50cnkoc2VsZik6CisgICAgICAgIHJvb3QsIF8sIGZpZWxkcywgbGlua3MgPSBzZWxmLnNpbmdsZShjd2Q9Jy9lbHNld2hlcmUnLCBhcmdzPVsnbm9kZScsICdvdGhlci5tanMnXSkKKyAgICAgICAgZmllbGRzWzkwMV1bJ2NvbW0nXS5yZWFkX3RleHQucmV0dXJuX3ZhbHVlID0gJ01haW5UaHJlYWRcbicKKyAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChzZWxmLnNjYW4ocm9vdCwgbGlua3MpWydzdGF0ZSddLCAnYWJzZW50JykKKworICAgIGRlZiB0ZXN0X3JlbmFtZWRfbm9kZV9leGVjdXRhYmxlX2NoYW5nZV9pc19yZWplY3RlZChzZWxmKToKKyAgICAgICAgcm9vdCwgXywgZmllbGRzLCBsaW5rcyA9IHNlbGYuc2luZ2xlKGV4ZT0nL3VudHJ1c3RlZC9ub2RlJykKKyAgICAgICAgZmllbGRzWzkwMV1bJ2NvbW0nXS5yZWFkX3RleHQucmV0dXJuX3ZhbHVlID0gJ01haW5UaHJlYWRcbicKKyAgICAgICAgd2l0aCBtb2NrLnBhdGNoLm9iamVjdChub2RlLm9zLCAncmVhZGxpbmsnLCBzaWRlX2VmZmVjdD1saW5rcy5fX2dldGl0ZW1fXyksIHNlbGYuYXNzZXJ0UmFpc2VzKG5vZGUuUHJvYmVFcnJvcikgYXMgZXJyb3I6CisgICAgICAgICAgICBub2RlLnByb2JlKCdpbnNwZWN0JywgMTAwMCwgJy9vcHQvc2wvbm9kZScsICcvb3B0L3NsJywKKyAgICAgICAgICAgICAgICAgICAgICAgW3sncGlkJzogOTAxLCAnc3RhcnRfdGltZSc6ICcxMjM0NSd9XSwgcHJvY19yb290PXJvb3QpCisgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwoZXJyb3IuZXhjZXB0aW9uLmNvZGUsICd1bnRydXN0ZWRfZXhlJykKKwogaWYgX19uYW1lX18gPT0gJ19fbWFpbl9fJzoKICAgICB1bml0dGVzdC5tYWluKCkK'))
+          git apply --check MainThread-node-presence.patch
+          if ($LASTEXITCODE -ne 0) { throw 'Patch does not match upstream' }
+          git apply MainThread-node-presence.patch
+          if ($LASTEXITCODE -ne 0) { throw 'Patch application failed' }
+          git rev-parse HEAD | Set-Content SOURCE_COMMIT.txt
+          git diff --check
+          if ($LASTEXITCODE -ne 0) { throw 'Diff validation failed' }
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test Node identity probe
+        run: python -B -m unittest discover -s crates/ncd-backend-snowluma/resources -p '*_test.py'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check version metadata
+        run: pnpm run check:versions
+      - name: Build Windows MSI
+        run: pnpm run tauri:build:msi
+      - name: Collect and validate outputs
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path repair-artifacts | Out-Null
+          $msis = @(Get-ChildItem target/release/bundle -Filter '*.msi' -Recurse -File)
+          if ($msis.Count -eq 0) { throw 'No MSI produced' }
+          foreach ($msi in $msis) {
+            & powershell -NoProfile -ExecutionPolicy Bypass -File scripts/assert-msi-layout.ps1 -MsiPath $msi.FullName
+            if ($LASTEXITCODE -ne 0) { throw 'MSI layout assertion failed' }
+            Copy-Item -LiteralPath $msi.FullName -Destination repair-artifacts
+          }
+          Copy-Item SOURCE_COMMIT.txt,MainThread-node-presence.patch -Destination repair-artifacts
+          Get-ChildItem repair-artifacts -File | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $([IO.Path]::GetFileName($_.Path))" } | Set-Content repair-artifacts/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SnowLuma-MainThread-Fix-3.5.16-Windows
+          path: repair-artifacts/*
+          if-no-files-found: error
+          retention-days: 7
